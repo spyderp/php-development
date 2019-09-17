@@ -1,0 +1,31 @@
+version: "3.1"
+services:
+  db:
+    image: mariadb:10.1
+    container_name: prueba-mariadb
+    volumes:
+       - dbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=prueba
+    networks:
+      - backends
+    ports:
+      - "3306:3306"
+  app:
+    build: docker/php-apache2
+    container_name: prueba-web
+    depends_on:
+      - db
+    volumes:
+      - .:/var/www/html
+    networks:
+      - backends
+      - frontends
+    ports:
+      - "80:80"
+volumes:
+    dbdata:
+networks:
+  backends:
+  frontends:
